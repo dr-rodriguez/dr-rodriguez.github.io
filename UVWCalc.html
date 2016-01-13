@@ -1,0 +1,267 @@
+<HTML> 
+<HEAD> 
+<TITLE>David Rodriguez's UVW Calculator</TITLE> 
+<link rel="stylesheet" type="text/css" href="default.css" />
+<SCRIPT type="text/javascript">
+// Global Variables
+var ra = 17.4263; //deg
+var dec = 61.5471; //deg
+var pmra = 628.42; //mas/yr
+var pmdec = 76.65; //mas/yr
+var d = 139; //pc
+var rv = -321.4; //km/s
+var radcon = Math.PI/180;  //Radians conversion
+var decplace = 2; // Number of decimal places for UVW
+
+var flag = 0; // Flag: 0- normal, 1- RV variation, 2- D variation
+var output = ""; // The output text
+
+var k = 4.74047; //Equivalent of 1 A.U/yr in km/s  
+var A00 = 0.0548755604;
+var A01 = 0.8734370902;
+var A02 = 0.4838350155;
+var A10 = 0.4941094279;
+var A11 = -0.4448296300;
+var A12 = 0.7469822445;
+var A20 = -0.8676661490;
+var A21 = -0.1980763734;
+var A22 = 0.4559837762;
+
+// Compute the UVW and display it
+function compute()
+{
+var cosd = Math.cos(dec * radcon);
+var sind = Math.sin(dec * radcon );
+var cosa = Math.cos(ra * radcon);
+var sina = Math.sin(ra * radcon);
+
+var vec1 = rv;
+var plx = 1000./d;
+var vec2=k*pmra/plx;
+var vec3=k*pmdec/plx;
+
+var u = ( A00*cosa*cosd+A01*sina*cosd+A02*sind)*vec1+
+    (-A00*sina +A01*cosa)*vec2+
+    (-A00*cosa*sind-A01*sina*sind+A02*cosd)*vec3;
+var v = ( A10*cosa*cosd+A11*sina*cosd+A12*sind)*vec1+
+    (-A10*sina+A11*cosa)*vec2+
+    (-A10*cosa*sind-A11*sina*sind+A12*cosd)*vec3;
+var w = ( A20*cosa*cosd+A21*sina*cosd+A22*sind)*vec1+
+    (-A20*sina+A21*cosa)*vec2+
+    (-A20*cosa*sind-A21*sina*sind+A22*cosd)*vec3;
+u = -u;
+
+var uvwtxt = stround(u,decplace)+'&nbsp;&nbsp;&nbsp;'+
+      stround(v,decplace)+'&nbsp;&nbsp;&nbsp;'+stround(w,decplace)+'<BR>';
+var txt = "";
+if (flag==0) { txt = uvwtxt };
+if (flag==1) { txt = stround(rv,1)+'&nbsp;&nbsp;&nbsp;'+uvwtxt };
+if (flag==2) { txt = stround(d,1)+'&nbsp;&nbsp;&nbsp;'+uvwtxt };
+
+output += txt;
+}
+
+// Normal Run
+function GO()
+{
+ra = parseFloat(document.getval.ra.value);
+dec = parseFloat(document.getval.dec.value);
+pmra = parseFloat(document.getval.pmra.value);
+pmdec = parseFloat(document.getval.pmdec.value);
+d = parseFloat(document.getval.d.value);
+rv = parseFloat(document.getval.rv.value);
+flag = 0;
+output = 'U&nbsp;&nbsp;&nbsp;V&nbsp;&nbsp;&nbsp;W<BR>';
+compute();
+display();
+}
+
+// RV Run
+function RVGO()
+{
+ra = parseFloat(document.getval.ra.value);
+dec = parseFloat(document.getval.dec.value);
+pmra = parseFloat(document.getval.pmra.value);
+pmdec = parseFloat(document.getval.pmdec.value);
+d = parseFloat(document.getval.d.value);
+var rvi = parseFloat(document.getval.rvi.value);
+var rvf = parseFloat(document.getval.rvf.value);
+var step = parseFloat(document.getval.rvstep.value);
+flag = 1;
+output = 'RV&nbsp;&nbsp;&nbsp;U&nbsp;&nbsp;&nbsp;V&nbsp;&nbsp;&nbsp;W<BR>';
+
+// Loop
+var i = 0; 
+  do
+  {
+  rv = rvi+ i*step;
+  compute();
+  i++;
+  }
+  while (rv < rvf);
+
+display();
+}
+
+// Distance Run
+function DGO()
+{
+ra = parseFloat(document.getval.ra.value);
+dec = parseFloat(document.getval.dec.value);
+pmra = parseFloat(document.getval.pmra.value);
+pmdec = parseFloat(document.getval.pmdec.value);
+rv = parseFloat(document.getval.rv.value);
+var di = parseFloat(document.getval.di.value);
+var df = parseFloat(document.getval.df.value);
+var step = parseFloat(document.getval.dstep.value);
+flag = 2;
+output = 'D&nbsp;&nbsp;&nbsp;U&nbsp;&nbsp;&nbsp;V&nbsp;&nbsp;&nbsp;W<BR>';
+
+// Loop
+var i = 0; 
+  do
+  {
+  d = di+ i*step;
+  compute();
+  i++;
+  }
+  while (d < df);
+
+display();
+}
+
+
+// From Ned's cosmology calculator
+function stround(x,m) {
+// rounds to m digits and makes a string
+  var tenn = 1;
+  var i = 0;
+  for (i=0; i != m; i++) {
+    tenn = tenn*10;
+  }
+  var y = Math.round(Math.abs(x)*tenn);
+  var str = " "+y;
+  while (m > str.length-2) {
+    str = " 0" + str.substring(1,str.length);
+  }
+  str = str.substring(0,str.length-m)+"."+
+        str.substring(str.length-m,str.length);
+  if (x < 0) str = " -"+str.substring(1,str.length);
+  return str;
+}
+
+// Display the result
+function display()
+{
+document.getElementById('div1').innerHTML=output;
+document.getElementById('div1').style.display='block';
+}
+
+// Clear the form
+function clearForm()
+{
+var elements = document.getval.elements; 
+for(i=0; i<elements.length; i++) {
+  fieldtype = elements[i].type.toLowerCase();
+  switch(fieldtype) {
+    case "text":
+      elements[i].value = "";
+      break;
+    default:
+      break;
+  }
+};
+document.getElementById('div1').innerHTML="";
+document.getElementById('div1').style.display='block';
+}
+
+</SCRIPT>
+</HEAD> 
+<body>
+
+<div id="outer">
+
+ 	<div id="inner">
+
+
+		<div id="header"></div>
+	
+		<div id="splash"></div>
+		
+		<div id="menu">
+			<ul>
+				<li class="first"><a href="index.html">Home</a></li>
+				<li><a href="research.html">Research</a></li>
+				<li><a href="publi.html">Publications</a></li>
+				<li><a href="education.html">Teaching</a></li>
+				<li><a href="computing.html">Computing</a></li>
+				<li><a href="misc.html">Misc.</a></li>
+				<li><a href="links.html">Links</a></li>
+			</ul>
+
+		</div>
+
+
+		<div id="primarycontent">
+<center>
+<br>
+
+<h1>Galactic UVW Javascript Calculator</h1>
+<br>
+<h2>Created by <a href="http://www.astro.ucla.edu/~drodrigu">David Rodriguez</a>, UCLA 2010</h2>
+<br>
+<p>This code is based on the GAL_UVW routine in the IDL Astronomy User's Library, which you can access <a href="http://idlastro.gsfc.nasa.gov/homepage.html">here</a>. <br>
+U is positive towards the Galactic center. UVW are in km/s and rounded to 2 decimal places. Not corrected for solar motion.</p>
+<p>The IDL and Python source code for this and other similar tools can be found at <a href="https://github.com/dr-rodriguez/UVW_Calculator">Github</a>.</p>
+</center>
+<HR> <p></p>
+<FORM NAME="getval"> 
+<p>Normal calculation:</p>
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="ra" VALUE="17.4263" SIZE=10>&nbsp;&nbsp;RA (J2000, deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="dec" VALUE="61.5471" SIZE=10>&nbsp;&nbsp;Dec (J2000, deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="pmra" VALUE="628.42" SIZE=10>&nbsp;&nbsp;pmRA (mas/yr)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="pmdec" VALUE="76.65" SIZE=10>&nbsp;&nbsp;pmDec (mas/yr)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="d" VALUE="139" SIZE=10>&nbsp;&nbsp;Distance (pc)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="rv" VALUE="-321.4" SIZE=10>&nbsp;&nbsp;Radial Velocity (km/s)<BR> 
+<INPUT TYPE="BUTTON" NAME="Calculate" VALUE="Calculate"
+onClick="GO();window.location='#data';"> <p></p>
+<hr><p></p>
+<p>Calculate for multiple RV values:</p>
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="rvi" VALUE="-80" SIZE=10>&nbsp;&nbsp;Initial Velocity (km/s)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="rvf" VALUE="80" SIZE=10>&nbsp;&nbsp;Final Velocity (km/s)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="rvstep" VALUE="10" SIZE=10>&nbsp;&nbsp;Velocity Step (km/s)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="BUTTON" NAME="Calculate" VALUE="Calculate"
+onClick="RVGO();window.location='#data';"> <p></p>
+<HR> <p></p>
+<p>Calculate for multiple distance values:</p>
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="di" VALUE="30" SIZE=10>&nbsp;&nbsp;Initial Distance (pc)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="df" VALUE="150" SIZE=10>&nbsp;&nbsp;Final Distance (pc)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="dstep" VALUE="10" SIZE=10>&nbsp;&nbsp;Distance Step (pc)<BR> 
+<INPUT TYPE="BUTTON" NAME="Calculate" VALUE="Calculate"
+onClick="DGO();window.location='#data';"> <p></p>
+<HR> <p></p>
+<INPUT TYPE="RESET" VALUE="Reset Form">
+<INPUT TYPE="BUTTON" NAME="Clear" VALUE="Clear Form" onClick="clearForm();"> 
+</FORM> <p></p>
+<hr> <p></p>
+
+<a name="data"></a>
+<div id='div1' style="display:none"></div>
+
+
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=7884459; 
+var sc_invisible=1; 
+var sc_security="e252bc4e"; 
+</script>
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script>
+<noscript><div class="statcounter"><a title="free hit
+counter" href="http://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="http://c.statcounter.com/7884459/0/e252bc4e/1/"
+alt="free hit counter"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+</BODY> 
+</HTML> 

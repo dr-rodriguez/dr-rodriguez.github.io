@@ -1,0 +1,271 @@
+/*
+	Partially based on:
+	terrafirma1.0 by nodethirtythree design
+	http://www.nodethirtythree.com
+	With many modifications and some additions
+
+*/
+
+*
+{
+padding: 0px;
+margin: 0px;
+}
+
+body
+{
+background: #F9F9F7;
+font-size: 14px;
+font-family: "trebuchet ms", helvetica, sans-serif;
+color: #232323;
+line-height: 18px;
+}
+
+a
+{
+color: #000076; /*#FF7800;*/
+text-decoration: underline;
+}
+
+a:hover
+{
+text-decoration: none;
+}
+
+sup
+{
+font-size: 0.5em;
+}
+
+
+p
+{
+margin-bottom: 14px;
+text-align: left;
+}
+
+/* div.right_image/left_image come from Ian's/Tuan's css sheet
+*/
+div.right_image
+{
+float:right;
+text-align:center;
+font-size:.9em;
+font-style:italic;
+border: 1px silver solid;
+padding: .5em;
+margin:.5em 0em .5em 0.5em;
+}
+
+
+div.left_image
+{
+float:left;
+text-align:center;
+font-size:.9em;
+font-style:italic;
+border: 1px silver solid;
+padding: 0.5em;
+margin: 0.5em 1em 0.5em 0em;
+}
+
+#box
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	margin: 15px;
+	width: 700px;
+	text-align: center;
+	border-collapse: collapse;
+}
+#box th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	background: #b9c9fe;
+	border-top: 4px solid #00007b; /*#aabcfe;*/
+	border-bottom: 1px solid #fff;
+	color: #000076; /*#039;*/
+}
+#box td
+{
+	padding: 8px;
+	/*background: #e8edff; */
+	border-bottom: 1px solid #fff;
+	/*color: #000076; #669;*/
+	border-top: 1px solid transparent;
+}
+#box tr:hover td
+{
+	background: #d0dafd;
+	color: #000076; /*#339;*/
+}
+
+
+ul.linklist
+{
+list-style: none;
+}
+
+ul.linklist li
+{
+border-top: solid 1px #EEEEEE;
+padding-top: 5px;
+margin: 5px 0px 0px 0px;
+}
+
+ul.linklist li.first
+{
+border-top: 0px;
+margin-top: 0px;
+padding-top: 0px;
+}
+
+#outer
+{
+position: relative;
+width: 790px;
+margin: 0 auto;
+}
+
+#inner
+{
+position: relative;
+padding: 13px 30px 13px 30px;
+z-index: 2;
+}
+
+#header
+{
+position: absolute;
+background: url('images/name1.jpg');
+width: 202px;
+height: 92px;
+color: #fff;
+padding-left: 0px;
+}
+
+#splash
+{
+position: absolute;
+right: 30px;
+background: #EAEAE2 url('images/sanjuan1.jpg') no-repeat;
+width: 521px;
+height: 92px;
+}
+
+#menu
+{
+position: relative;
+background: #00007b url('images/a16.gif') repeat-x;
+height: 57px;
+padding: 0px 20px 0px 5px;
+margin: 98px 0px 20px 0px;
+}
+
+#menu ul
+{
+}
+
+#menu ul li
+{
+display: inline;
+line-height: 52px;
+padding-left: 3px;
+}
+
+#menu ul li.first
+{
+border-left: 0px;
+}
+
+#menu ul li a
+{
+background-color: transparent;
+background-repeat: repeat-x;
+padding: 8px 12px 8px 12px;
+font-size: 12px;
+color: #fff;
+font-weight: bold;
+}
+
+#menu ul li a:hover
+{
+background: #fff url('images/a18.gif') repeat-x top;
+color: #4A4A24;
+text-decoration: none;
+}
+
+
+#primarycontent
+{
+position: relative;
+width: 750px;
+float: left;
+}
+
+h5
+{
+font-size: 16px;
+/*color: #656551;*/
+}
+
+h4
+{
+font-size: 16px;
+color: #656551;
+padding: 20px 0px 10px 15px;
+background: url('images/a22.gif') bottom repeat-x;
+}
+
+#primarycontent h3
+{
+position: relative;
+top: 4px;
+font-size: 18px;
+line-height: 25px;
+color: #656551;
+letter-spacing: -1px;
+background: url('images/a22.gif') bottom repeat-x;
+padding: 0px 0px 10px 15px;
+margin-bottom: 20px;
+}
+
+#primarycontent .content
+{
+padding: 0px 15px 0px 15px;
+margin-bottom: 20px;
+}
+
+#primarycontent .post
+{
+margin-bottom: 30px;
+}
+
+#primarycontent .post .header
+{
+position: relative;
+}
+
+
+#primarycontent .post .content
+{
+margin-bottom: 0px;
+}
+
+#footer
+{
+position: relative;
+clear: both;
+height: 66px;
+text-align: center;
+line-height: 66px;
+background-image: url('images/a50.gif');
+color: #A8A88D;
+}
+
+#footer a
+{
+color: #8C8C73;
+}
