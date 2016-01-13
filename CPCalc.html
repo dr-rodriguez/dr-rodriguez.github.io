@@ -1,0 +1,450 @@
+<HTML> 
+<HEAD> 
+<TITLE>David Rodriguez's Convergent Point Analysis Tool</TITLE> 
+<link rel="stylesheet" type="text/css" href="default.css" />
+<SCRIPT type="text/javascript">
+// Global Variables
+var ra = 165.46627797; //deg
+var dec = -34.70473119; //deg
+var pmra = -66.19; //mas/yr
+var pmde = -13.90; //mas/yr
+var pmra_e = 1.85; //mas/yr
+var pmde_e = 1.47; //mas/yr
+var radcon = Math.PI/180;  //Radians conversion
+var decplace = 1; // Number of decimal places for Prob, RV, D_Kin
+
+var ra0 = 99.8; //deg
+var de0 = -27.7; //deg
+var sigtheta = 2; //deg
+var sigint = 1; //km/s
+var groupd = 50; //pc
+var vel = 22.0; //km/s
+
+var flag = 0; // Flag: 0- normal, 1- RV variation, 2- D variation
+var output = ""; // The output text
+
+var k = 4.74047; //Equivalent of 1 A.U/yr in km/s  
+
+
+// Compute the UVW and display it
+function compute()
+{
+var p1 = Math.sin((ra0-ra)*radcon);
+var p2 = Math.cos(dec*radcon)*Math.tan(de0*radcon) - Math.sin(dec*radcon)*Math.cos( (ra0-ra)*radcon );
+
+//var theta2 = Math.atan(p1/p2);
+var theta = Math.atan2(p1,p2);
+
+var mupar = pmra*Math.sin(theta) + pmde*Math.cos(theta);
+var mutan = -1*pmra*Math.cos(theta) + pmde*Math.sin(theta);
+    
+var sigtan2 = Math.pow((pmra_e*Math.cos(theta)),2) + Math.pow((pmde_e*Math.sin(theta)),2) + Math.pow((sigtheta*mupar*radcon),2);
+   
+var lamb1 = Math.sin(dec*radcon)*Math.sin(de0*radcon) + Math.cos(dec*radcon)*Math.cos(de0*radcon)*Math.cos((ra0-ra)*radcon);
+var lamb = Math.acos(lamb1);
+
+var sigint2 = sigint * 1000. / (groupd * 4.74047);
+var t2 = Math.pow(mutan,2) / (sigtan2 + Math.pow(sigint2,2));
+var prob = Math.exp(-0.5 * t2) * 100;
+
+var para = mupar*4.74047 / (vel * Math.sin(lamb));
+var dkin = 1000./para;
+var vrad = vel*Math.cos(lamb);
+
+var out1 = ''
+//'T2: '+stround(t2,3)+'<BR>';
+var out2 = 'Prob: '+stround(prob,1)+'<BR>';
+var out3 = 'RV: '+stround(vrad,decplace)+'<BR>';
+var out4 = 'D_Kin: '+stround(dkin,decplace)+'<BR>';
+
+if (prob>=80) {out2 = '<b>Prob: '+stround(prob,1)+'</b><BR>';};
+if (dkin<=0) {
+out2 = '<font color="red">Prob: '+stround(prob,1)+'<BR>';
+out3 = 'RV: '+stround(vrad,decplace)+'<BR>';
+out4 = 'D_Kin: '+stround(dkin,decplace)+'</font><BR>';
+};
+
+var txt = "";
+if (flag==0) { txt = out1+out2+out3+out4 };
+
+//txt += theta+' '+mupar+' '+mutan+' '+sigint2+' '+sigtan2
+output += txt;
+}
+
+// Normal Run
+function GO()
+{
+ra = parseFloat(document.getval.ra.value);
+dec = parseFloat(document.getval.dec.value);
+pmra = parseFloat(document.getval.pmra.value);
+pmde = parseFloat(document.getval.pmdec.value);
+pmra_e = parseFloat(document.getval.pmra_e.value);
+pmde_e = parseFloat(document.getval.pmde_e.value);
+ra0 = parseFloat(document.getval.ra0.value);
+de0 = parseFloat(document.getval.de0.value);
+vel = parseFloat(document.getval.vel.value);
+sigtheta = parseFloat(document.getval.sigtheta.value);
+sigint = parseFloat(document.getval.sigint.value);
+groupd = parseFloat(document.getval.groupd.value);
+flag = 0;
+output = 'Results<BR>';
+compute();
+display();
+}
+
+// All Groups
+function allGO()
+{
+ra = parseFloat(document.getval.ra.value);
+dec = parseFloat(document.getval.dec.value);
+pmra = parseFloat(document.getval.pmra.value);
+pmde = parseFloat(document.getval.pmdec.value);
+pmra_e = parseFloat(document.getval.pmra_e.value);
+pmde_e = parseFloat(document.getval.pmde_e.value);
+ra0 = parseFloat(document.getval.ra0.value);
+de0 = parseFloat(document.getval.de0.value);
+vel = parseFloat(document.getval.vel.value);
+sigtheta = parseFloat(document.getval.sigtheta.value);
+sigint = parseFloat(document.getval.sigint.value);
+groupd = parseFloat(document.getval.groupd.value);
+flag = 0;
+output = '<HR>Results for user defined group<BR>';
+compute();
+
+output += '<HR>Results for TWA (from Looper et al. 2010)<BR>';
+ra0 = 99.8; //deg
+de0 = -27.7; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 50; //pc
+vel = 22.0; //km/s
+compute();
+
+output += '<HR>Results for TWA (from Rodriguez et al., 2013, ApJ 774, 101)<BR>';
+ra0 = 95; //deg
+de0 = -26; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 50; //pc
+vel = 21.6; //km/s
+compute();
+
+output += '<HR>Results for Tuc-Hor (from Rodriguez et al., 2013, ApJ 774, 101)<BR>';
+ra0 = 119; //deg
+de0 = -27; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 50; //pc
+vel = 23.2; //km/s
+compute();
+
+output += '<HR>Results for beta Pic (from Rodriguez et al., 2013, ApJ 774, 101)<BR>';
+ra0 = 90; //deg
+de0 = -28; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 40; //pc
+vel = 20.8; //km/s
+compute();
+
+output += '<HR>Results for AB Dor (from Rodriguez et al., 2013, ApJ 774, 101)<BR>';
+ra0 = 92; //deg
+de0 = -47; //deg
+sigtheta = 2; //deg
+sigint = 2; //km/s
+groupd = 50; //pc
+vel = 31.2; //km/s
+compute();
+
+output += '<HR>Results for Carina-Near (from Rodriguez et al., 2013, ApJ 774, 101)<BR>';
+ra0 = 98; //deg
+de0 = 0; //deg
+sigtheta = 2; //deg
+sigint = 2.6; //km/s
+groupd = 30; //pc
+vel = 31.3; //km/s
+compute();
+
+output += '<HR>Results for Columba (from Rodriguez et al., 2013, ApJ 774, 101)<BR>';
+ra0 = 106; //deg
+de0 = -30; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 80; //pc
+vel = 26.5; //km/s
+compute();
+
+display();
+}
+
+// Set Group values to empty
+function setGroup()
+{
+document.getval.ra0.value = "";
+document.getval.de0.value = "";
+document.getval.vel.value = "";
+document.getval.sigtheta.value = "";
+document.getval.sigint.value = "";
+document.getval.groupd.value = "";
+}
+
+// Set Group values using TWA from Looper et al.
+function setTWA()
+{
+document.getval.ra0.value = 99.8;
+document.getval.de0.value = -27.7;
+document.getval.vel.value = 22.0;
+document.getval.sigtheta.value = 2;
+document.getval.sigint.value = 1;
+document.getval.groupd.value = 50;
+}
+
+
+function report(period) {
+if (period=="") return;
+
+if (period=="twa1") {
+ra0 = 99.8; //deg
+de0 = -27.7; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 50; //pc
+vel = 22.0; //km/s
+} ;
+
+if (period=="twa2") {
+ra0 = 95; //deg
+de0 = -26; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 50; //pc
+vel = 21.6; //km/s
+};
+
+if (period=="th") {
+ra0 = 119; //deg
+de0 = -27; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 50; //pc
+vel = 23.2; //km/s
+} ;
+
+if (period=="bpic") {
+ra0 = 90; //deg
+de0 = -28; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 40; //pc
+vel = 20.8; //km/s
+} ;
+
+if (period=="abd") {
+ra0 = 92; //deg
+de0 = -47; //deg
+sigtheta = 2; //deg
+sigint = 2; //km/s
+groupd = 60; //pc
+vel = 31.2; //km/s
+} ;
+
+if (period=="cn") {
+ra0 = 98; //deg
+de0 = 0; //deg
+sigtheta = 2; //deg
+sigint = 2.6; //km/s
+groupd = 30; //pc
+vel = 31.3; //km/s
+} ;
+
+if (period=="col") {
+ra0 = 106; //deg
+de0 = -30; //deg
+sigtheta = 2; //deg
+sigint = 1; //km/s
+groupd = 80; //pc
+vel = 26.5; //km/s
+} ;
+
+
+document.getval.ra0.value = ra0;
+document.getval.de0.value = de0;
+document.getval.vel.value = vel;
+document.getval.sigtheta.value = sigtheta;
+document.getval.sigint.value = sigint;
+document.getval.groupd.value = groupd;
+}
+
+
+// From Ned's cosmology calculator
+function stround(x,m) {
+// rounds to m digits and makes a string
+  var tenn = 1;
+  var i = 0;
+  for (i=0; i != m; i++) {
+    tenn = tenn*10;
+  }
+  var y = Math.round(Math.abs(x)*tenn);
+  var str = " "+y;
+  while (m > str.length-2) {
+    str = " 0" + str.substring(1,str.length);
+  }
+  str = str.substring(0,str.length-m)+"."+
+        str.substring(str.length-m,str.length);
+  if (x < 0) str = " -"+str.substring(1,str.length);
+  return str;
+}
+
+
+//Send to BANYAN
+function gobanyan()
+{
+ra = parseFloat(document.getval.ra.value);
+dec = parseFloat(document.getval.dec.value);
+pmra = parseFloat(document.getval.pmra.value);
+pmde = parseFloat(document.getval.pmdec.value);
+pmra_e = parseFloat(document.getval.pmra_e.value);
+pmde_e = parseFloat(document.getval.pmde_e.value);
+
+//var url = 'http://www.astro.umontreal.ca/~malo/banyan.php?radeg='+ra+'&amp;pmra='+pmra+'&amp;pmdec='+pmde+'&amp;hrv=&amp;plx=&amp;submit=Submit&amp;dec='+dec+'&amp;epmra='+pmra_e+'&amp;epmdec='+pmde_e+'&amp;ehrv=&amp;eplx=&amp;targetname=';
+var url = 'http://www.astro.umontreal.ca/~malo/banyan.php?radeg='+ra+'&pmra='+pmra+'&pmdec='+pmde+'&hrv=&plx=&submit=Submit&dec='+dec+'&epmra='+pmra_e+'&epmdec='+pmde_e+'&ehrv=&eplx=&targetname='
+
+
+window.open(url,'banyan','width=400,height=200,toolbar=yes, location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,copyhistory=yes, resizable=yes');
+}
+
+
+// Display the result
+function display()
+{
+document.getElementById('div1').innerHTML=output;
+document.getElementById('div1').style.display='block';
+}
+
+// Clear the form
+function clearForm()
+{
+var elements = document.getval.elements; 
+for(i=0; i<elements.length; i++) {
+  fieldtype = elements[i].type.toLowerCase();
+  switch(fieldtype) {
+    case "text":
+      elements[i].value = "";
+      break;
+    default:
+      break;
+  }
+};
+document.getElementById('div1').innerHTML="";
+document.getElementById('div1').style.display='block';
+}
+
+</SCRIPT>
+</HEAD> 
+<body>
+
+<div id="outer">
+
+ 	<div id="inner">
+
+
+		<div id="header"></div>
+	
+		<div id="splash"></div>
+		
+		<div id="menu">
+			<ul>
+				<li class="first"><a href="index.html">Home</a></li>
+				<li><a href="research.html">Research</a></li>
+				<li><a href="publi.html">Publications</a></li>
+				<li><a href="education.html">Teaching</a></li>
+				<li><a href="computing.html">Computing</a></li>
+				<li><a href="misc.html">Misc.</a></li>
+				<li><a href="links.html">Links</a></li>
+			</ul>
+
+		</div>
+
+
+		<div id="primarycontent">
+<center>
+<br>
+
+<h1>Convergent Point Analysis Tool</h1>
+<br>
+<h2>Created by <a href="http://www.astro.ucla.edu/~drodrigu">David Rodriguez</a>, U. Chile 2013</h2>
+<br>
+<p align="left">This code is based on the methods described in de Bruijne (<a href="http://adsabs.harvard.edu/abs/1999MNRAS.306..381D">1999 MNRAS, 306, 381</a>), Mamajek (<a href="http://adsabs.harvard.edu/abs/2005ApJ...634.1385M">2005 ApJ, 634, 1385</a>), and Jones (<a href="http://adsabs.harvard.edu/abs/1971MNRAS.152..231J">1971 MNRAS, 152, 231</a>).<br>
+The convergent points used in this website are listed in Rodriguez et al. (2013, ApJ 774, 101). 
+In addition to running the analysis for an individual group, this tool can present the results for all stored groups simultaneously.
+We kindly ask that if this tool and its results are useful in your work you reference our paper.</p>
+<p align="left">
+The idea behind the convergent point analysis is that one takes the parameters of the object and computes the proper motions in directions parallel and perpendicular to the location of the convergent point. Probabilities are estimated from the magnitude of the perpendicular component of proper motion and associated errors (see Equation 23 in de Buijne 1999). We note that varying the internal dispersion and distance to the group only marginally affects the probabilities. 
+The sigma-theta term is a measure of the uncertainty in the convergent point location (see Equation 6).
+</p>
+<p align="left">Results of these tool should be used with <b>caution</b> (see our paper for details and a comparison with BANYAN). A high probability does not necessarily imply the star is young and a member of the particular moving group. In particular, compare the predicted distance with the group distance. A large difference may suggest the target is not a real member. 
+<br> We recommended interested users compare results for their objects with the Bayesian Analysis Tool developed by Malo et al. (2013) and available <a href="http://www.astro.umontreal.ca/~malo/banyan.php">here</a>. For convenience, an option exists to send your information to BANYAN.</p>
+<p><b>Important Note</b>: When comparing with BANYAN, note that this convergent point tool does not take into account measured radial velocities or distances whereas BANYAN can. Hence, if you wish to directly compare membership likelihoods from both tools make sure to use only object coordinates and proper motions.</p>
+</center>
+<HR> <p></p>
+<FORM NAME="getval"> 
+<p>Group Information:</p>
+<INPUT TYPE="BUTTON" NAME="Clear" VALUE="Clear Group" onClick="setGroup();"> 
+<select name="aa" onchange="report(this.value)"> 
+<option value="">Select Group</option>
+<option value="twa1">TWA (Looper et al. 2010)</option>
+<option value="twa2">TWA</option>
+<option value="th">Tuc-Hor</option>
+<option value="bpic">beta Pic</option>
+<option value="abd">AB Dor</option>
+<option value="cn">Carina-Near</option>
+<option value="col">Columba</option>
+</select>
+<p></p>
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="ra0" VALUE="99.8" SIZE=10>&nbsp;&nbsp;RA (J2000, deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="de0" VALUE="-27.7" SIZE=10>&nbsp;&nbsp;Dec (J2000, deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="vel" VALUE="22.0" SIZE=10>&nbsp;&nbsp;Velocity (km/s)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="sigtheta" VALUE="2" SIZE=10>&nbsp;&nbsp;Sigma-Theta (deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="sigint" VALUE="1" SIZE=10>&nbsp;&nbsp;Internal Dispersion (km/s)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="groupd" VALUE="50" SIZE=10>&nbsp;&nbsp;Group Distance (pc)<BR><BR>
+<HR> <p></p>
+<p>Target Values:</p>
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="ra" VALUE="165.46627797" SIZE=10>&nbsp;&nbsp;RA (J2000, deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="dec" VALUE="-34.70473119" SIZE=10>&nbsp;&nbsp;Dec (J2000, deg)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="pmra" VALUE="-66.19" SIZE=10>&nbsp;&nbsp;pmRA (mas/yr)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="pmdec" VALUE="-13.90" SIZE=10>&nbsp;&nbsp;pmDec (mas/yr)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="pmra_e" VALUE="1.85" SIZE=10>&nbsp;&nbsp;pmRA error (mas/yr)<BR> 
+&nbsp;&nbsp;<INPUT TYPE="TEXT" NAME="pmde_e" VALUE="1.47" SIZE=10>&nbsp;&nbsp;pmDec error (mas/yr)<BR> 
+<BR>
+<INPUT TYPE="BUTTON" NAME="Calculate" VALUE="Calculate"
+onClick="GO();window.location='#data';"> <p></p>
+<INPUT TYPE="BUTTON" NAME="Calculate" VALUE="Calculate for ALL Groups"
+onClick="allGO();window.location='#data';"> <p></p>
+<INPUT TYPE="BUTTON" NAME="BANYAN" VALUE="Send to BANYAN"
+onClick="gobanyan();"> <p></p>
+<HR> <p></p>
+<INPUT TYPE="RESET" VALUE="Reset Form">
+<INPUT TYPE="BUTTON" NAME="Clear" VALUE="Clear Form" onClick="clearForm();"> 
+</FORM> <p></p>
+<hr> <p></p>
+
+<a name="data"></a>
+<div id='div1' style="display:none"></div>
+
+
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=7884459; 
+var sc_invisible=1; 
+var sc_security="e252bc4e"; 
+</script>
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script>
+<noscript><div class="statcounter"><a title="free hit
+counter" href="http://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="http://c.statcounter.com/7884459/0/e252bc4e/1/"
+alt="free hit counter"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+</BODY> 
+</HTML> 
