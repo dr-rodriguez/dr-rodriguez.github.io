@@ -10,6 +10,7 @@
 		@include icon;
 		border-bottom: none;
 		position: relative;
+		width: auto;
 
 		> .label {
 			display: none;
@@ -17,6 +18,7 @@
 
 		&:before {
 			line-height: inherit;
+			margin-right: 0.5em;
 		}
 
 		&.solid,

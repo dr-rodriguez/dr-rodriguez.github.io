@@ -604,6 +604,7 @@ input, select, textarea {
 		text-decoration: none;
 		border-bottom: none;
 		position: relative;
+		width: auto;
 	}
 
 		.icon:before {
@@ -617,6 +618,7 @@ input, select, textarea {
 			text-transform: none !important;
 			font-family: 'Font Awesome 7 Free';
 			font-weight: 400;
+			margin-right: 0.5em;
 		}
 
 		.icon > .label {
@@ -926,6 +928,10 @@ input, select, textarea {
 				text-align: center;
 				width: 2.25rem;
 			}
+
+				ul.icons li a:before {
+					margin-right: 0;
+				}
 
 				ul.icons li a:hover {
 					background-color: rgba(255, 255, 255, 0.075);
@@ -1304,6 +1310,7 @@ input, select, textarea {
 
 			#header .logo .icon:before {
 				font-size: 2rem;
+				margin-right: 0;
 			}
 
 		#header .content {
@@ -1452,6 +1459,7 @@ input, select, textarea {
 
 				#header .logo .icon:before {
 					font-size: 1.75rem;
+					margin-right: 0;
 				}
 
 			#header .content .inner {
