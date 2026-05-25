@@ -605,6 +605,8 @@ input, select, textarea {
 		border-bottom: none;
 		position: relative;
 		width: auto;
+		font-family: "Source Sans Pro", sans-serif;
+		font-weight: 300;
 	}
 
 		.icon:before {

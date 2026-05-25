@@ -11,6 +11,8 @@
 		border-bottom: none;
 		position: relative;
 		width: auto;
+		font-family: _font(family);
+		font-weight: _font(weight);
 
 		> .label {
 			display: none;
