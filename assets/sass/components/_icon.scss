@@ -19,15 +19,24 @@
 			line-height: inherit;
 		}
 
-		&.solid {
+		&.solid,
+		&.fa-solid {
 			&:before {
 				font-weight: 900;
 			}
 		}
 
-		&.brands {
+		&.regular,
+		&.fa-regular {
 			&:before {
-				font-family: 'Font Awesome 5 Brands';
+				font-weight: 400;
+			}
+		}
+
+		&.brands,
+		&.fa-brands {
+			&:before {
+				font-family: 'Font Awesome 7 Brands';
 			}
 		}
 	}
