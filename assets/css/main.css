@@ -1303,9 +1303,20 @@ input, select, textarea {
 			}
 
 		#header .logo {
+			display: -moz-flex;
+			display: -webkit-flex;
+			display: -ms-flex;
+			display: flex;
+			-moz-align-items: center;
+			-webkit-align-items: center;
+			-ms-align-items: center;
+			align-items: center;
+			-moz-justify-content: center;
+			-webkit-justify-content: center;
+			-ms-justify-content: center;
+			justify-content: center;
 			width: 5.5rem;
 			height: 5.5rem;
-			line-height: 5.5rem;
 			border: solid 1px #ffffff;
 			border-radius: 100%;
 		}
