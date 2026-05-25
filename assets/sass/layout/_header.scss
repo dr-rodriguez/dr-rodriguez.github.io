@@ -48,15 +48,18 @@
 		}
 
 		.logo {
+			@include vendor('display', 'flex');
+			@include vendor('align-items', 'center');
+			@include vendor('justify-content', 'center');
 			width: 5.5rem;
 			height: 5.5rem;
-			line-height: 5.5rem;
 			border: solid _size(border-width) _palette(border);
 			border-radius: 100%;
 
 			.icon {
 				&:before {
 					font-size: 2rem;
+					margin-right: 0;
 				}
 			}
 		}
@@ -199,7 +202,6 @@
 			.logo {
 				width: 4.75rem;
 				height: 4.75rem;
-				line-height: 4.75rem;
 
 				.icon {
 					&:before {

@@ -506,7 +506,7 @@ input, select, textarea {
 				text-rendering: auto;
 				line-height: 1;
 				text-transform: none !important;
-				font-family: 'Font Awesome 5 Free';
+				font-family: 'Font Awesome 7 Free';
 				font-weight: 900;
 			}
 
@@ -604,6 +604,9 @@ input, select, textarea {
 		text-decoration: none;
 		border-bottom: none;
 		position: relative;
+		width: auto;
+		font-family: "Source Sans Pro", sans-serif;
+		font-weight: 300;
 	}
 
 		.icon:before {
@@ -615,8 +618,9 @@ input, select, textarea {
 			text-rendering: auto;
 			line-height: 1;
 			text-transform: none !important;
-			font-family: 'Font Awesome 5 Free';
+			font-family: 'Font Awesome 7 Free';
 			font-weight: 400;
+			margin-right: 0.5em;
 		}
 
 		.icon > .label {
@@ -627,12 +631,19 @@ input, select, textarea {
 			line-height: inherit;
 		}
 
-		.icon.solid:before {
+		.icon.solid:before,
+		.icon.fa-solid:before {
 			font-weight: 900;
 		}
 
-		.icon.brands:before {
-			font-family: 'Font Awesome 5 Brands';
+		.icon.regular:before,
+		.icon.fa-regular:before {
+			font-weight: 400;
+		}
+
+		.icon.brands:before,
+		.icon.fa-brands:before {
+			font-family: 'Font Awesome 7 Brands';
 		}
 
 /* Image */
@@ -919,6 +930,10 @@ input, select, textarea {
 				text-align: center;
 				width: 2.25rem;
 			}
+
+				ul.icons li a:before {
+					margin-right: 0;
+				}
 
 				ul.icons li a:hover {
 					background-color: rgba(255, 255, 255, 0.075);
@@ -1288,15 +1303,27 @@ input, select, textarea {
 			}
 
 		#header .logo {
+			display: -moz-flex;
+			display: -webkit-flex;
+			display: -ms-flex;
+			display: flex;
+			-moz-align-items: center;
+			-webkit-align-items: center;
+			-ms-align-items: center;
+			align-items: center;
+			-moz-justify-content: center;
+			-webkit-justify-content: center;
+			-ms-justify-content: center;
+			justify-content: center;
 			width: 5.5rem;
 			height: 5.5rem;
-			line-height: 5.5rem;
 			border: solid 1px #ffffff;
 			border-radius: 100%;
 		}
 
 			#header .logo .icon:before {
 				font-size: 2rem;
+				margin-right: 0;
 			}
 
 		#header .content {
@@ -1445,6 +1472,7 @@ input, select, textarea {
 
 				#header .logo .icon:before {
 					font-size: 1.75rem;
+					margin-right: 0;
 				}
 
 			#header .content .inner {

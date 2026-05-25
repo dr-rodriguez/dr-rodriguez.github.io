@@ -28,6 +28,10 @@
 				text-align: center;
 				width: 2.25rem;
 
+				&:before {
+					margin-right: 0;
+				}
+
 				&:hover {
 					background-color: _palette(border-bg);
 				}
